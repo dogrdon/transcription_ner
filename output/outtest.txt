@@ -1,0 +1,7 @@
+Patient
+Medical_history
+Symptom
+Anxiety
+Emotion
+Illness
+Physical_examination
