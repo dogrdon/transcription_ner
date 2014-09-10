@@ -3,59 +3,68 @@ import sys
 import spotlight
 from pprint import pprint
 
+dirname = sys.argv[1]
 
-transcription_txt = sys.argv[1]
-
-txt_file = open(transcription_txt, 'rb')
-
-text_contents = txt_file.read()
-
-try:
-	annotations = spotlight.annotate('http://spotlight.dbpedia.org/rest/annotate', text_contents, confidence=0.5, support=20)
-	subjects = []
+transcripts = os.listdir(dirname)
 
 
-	for i in annotations:
+def createSubjects():
+
+	for f in transcripts:
+		curr_tscrpt = os.path.join(dirname, f)
+
+
+		txt_file = open(curr_tscrpt, 'rb')
+
+		text_contents = txt_file.read()
+
+		getAnnotations(text_contents, f)
+
+
+def getAnnotations(textcontent, filename):
+
+	try:
+		outputname = os.path.join('./output/', filename)
+		annotations = spotlight.annotate('http://spotlight.dbpedia.org/rest/annotate', textcontent, confidence=0.5, support=20)
+		subjects = []
+
+
+		for i in annotations:
+			
+			uri = i['URI']
+			subject = uri.split('/')[-1]
+			subjects.append(subject)
+
+		counts = {}
+
+
+		for word in subjects:
+			
+			if word in counts:
+
+				counts[word] += 1
+			else:
+
+				counts[word] = 1
+
+		outfile = open(outputname, 'w+')
+
+
+
+		for k, v in counts.iteritems():
+			if v >= 10:
+
+				line = k + '\n'
+				outfile.write(line)
+
+		outfile.close()
+
+
+
+	except:
+		print "sorry, the annotation failed for:", transcription_txt
 		
-		uri = i['URI']
-		subject = uri.split('/')[-1]
-		subjects.append(subject)
-
-	counts = {}
 
 
-	for word in subjects:
-		
-		if word in counts:
-
-			counts[word] += 1
-		else:
-
-			counts[word] = 1
-
-	outfile = open('./output/outtest.txt', 'w+')
-
-
-
-	for k, v in counts.iteritems():
-		if v >= 10:
-
-			line = k + '\n'
-			outfile.write(line)
-
-	outfile.close()
-
-
-
-except:
-	print "sorry, the annotation failed for:", transcription_txt
-	
-
-
-
-
-#outfile = open('./output/test_output.txt', 'wb')
-
-#outfile.write(annotations)
-
-#outfile.close
+if __name__ == "__main__":
+	createSubjects()
