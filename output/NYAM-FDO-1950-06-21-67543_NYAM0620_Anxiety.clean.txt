@@ -1,0 +1,9 @@
+Hospital
+Medical_history
+Symptom
+Physician
+Anxiety
+Patient
+Illness
+Physical_examination
+Surgery

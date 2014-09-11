@@ -1,0 +1,7 @@
+Patient
+Home_care
+Disease
+Nursing_home
+Health_care
+Dementia
+Hospital

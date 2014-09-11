@@ -9,16 +9,18 @@ transcripts = os.listdir(dirname)
 
 
 def createSubjects():
+	while len(transcripts) > 0:
+		for f in transcripts:
+			curr_tscrpt = os.path.join(dirname, f)
 
-	for f in transcripts:
-		curr_tscrpt = os.path.join(dirname, f)
 
+			txt_file = open(curr_tscrpt, 'rb')
 
-		txt_file = open(curr_tscrpt, 'rb')
+			text_contents = txt_file.read()
 
-		text_contents = txt_file.read()
-
-		getAnnotations(text_contents, f)
+			getAnnotations(text_contents, f)
+	else:
+		print "That's it, I am done!"
 
 
 def getAnnotations(textcontent, filename):
@@ -59,10 +61,13 @@ def getAnnotations(textcontent, filename):
 
 		outfile.close()
 
+		transcripts.remove(filename)
+
+		print len(transcripts), "left to annotate"
 
 
 	except:
-		print "sorry, the annotation failed for:", transcription_txt
+		print "sorry, the annotation failed for:", filename
 		
 
 
